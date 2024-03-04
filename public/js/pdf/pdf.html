@@ -1,0 +1,48 @@
+<!doctype html>
+<html ng-app="app">
+
+<head>
+  <script src="angular.min.js"></script>
+  <script src="pdfmake.min.js"></script>
+  <script src="html2canvas.min.js"></script>
+  <script src="script.js"></script>
+</head>
+
+<body>
+  <div ng-controller="listController">
+    <div id="exportthis">
+		<h1>Liste etudiants</h1>
+		<table border=1 class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th>Id</th>
+					<th>Nom</th>
+					<th>Prenom</th>
+					<th>Sexe</th>
+					<th>Adresse</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>perso1</td>
+					<td>Ratefiarivony</td>
+					<td>Ravaka Niaina</td>
+					<td>m</td>
+					<td>II N B 23 Analamahitsy tanana</td>
+				</tr>
+				<tr>
+					<td>perso2</td>
+					<td>[	]</td>
+					<td>Norck</td>
+					<td>m</td>
+					<td>Yggdrasil</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2>{{data }}</h2>
+    </div>
+    <button ng-click="export()">export</button>
+  </div>
+</body>
+
+</html>
