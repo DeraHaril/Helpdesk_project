@@ -383,8 +383,8 @@ class UtilisateurController extends Controller
             }
 
             $config = array(
-                'clientId' => "obIRAamY60kB18ZUUKbzfQJO1HGzZGc3",
-                'clientSecret' => "fjTrMxoQwuNQq5QP"
+                'clientId' => $_ENV['OSMS_CLIENT_ID'],
+                'clientSecret' => $_ENV['OSMS_CLIENT_SECRET']
             );
 
             $osms = new Osms($config);
