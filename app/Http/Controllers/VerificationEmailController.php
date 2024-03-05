@@ -18,8 +18,8 @@ class VerificationEmailController extends Controller
 
     //Create an instance; passing `true` enables exceptions
     public function envoiEmailVerification($email){
-        $email_envoyeur = "deraa780@gmail.com";
-        $password = "Danzerdt1@@";
+        $email_envoyeur = $_ENV["MAIL_USERNAME"];
+        $password = $_ENV["MAIL_PASSWORD"];
         $mail = new PHPMailer(true);
         try {
             //Server settings
