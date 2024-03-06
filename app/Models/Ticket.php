@@ -44,6 +44,14 @@ class Ticket extends Model
             ->get();
     }
 
+    public static function getListeTicketConnectedClient($id){
+        return static ::select('ticket.id', 'client.nom_client', 'ticket.departement', 'ticket.categorie', 'ticket.confidentialite', 'ticket.etat', 'ticket.importance', 'ticket.date_ajout', 'ticket.sujet')
+            ->join('client', 'client.id', '=', 'ticket.id_client')
+            ->where('client.id', $id)
+            ->orderByDesc('ticket.date_ajout')
+            ->get();
+    }
+
 }
 
 
