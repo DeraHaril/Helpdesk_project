@@ -33,4 +33,8 @@ class Client extends Model implements Authenticatable,MustVerifyEmail
         'numero_telephone_verified_at' => 'datetime',
     ];
 
+    public static function getClientById($id){
+        return Client::where('id', $id)->first();
+    }
+
 }

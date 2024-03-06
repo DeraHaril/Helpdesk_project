@@ -9,4 +9,10 @@ class Intervenant extends Model
 {
     protected $table = 'intervenant';
     use HasFactory;
+
+    public static function getIntervenantById($id){
+        return Intervenant::where('id_intervenant', $id)->first();
+    }
 }
+
+

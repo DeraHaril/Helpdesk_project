@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models;
-
+use App\Models\Intervenant;
+use App\Models\Client;
 use App\Models\Ticket as Ticket;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -24,26 +25,19 @@ class gestionTicketController extends Controller
         //dump($request->session()->all());
         $id_personne = session('id');
         $nom_client = session('nom');
-        $client = DB::select("SELECT * from client where id = '$id_personne'");
-        $intervenant = DB::select("SELECT * from intervenant where id_intervenant = '$id_personne'");
-        $nbClient = count($client);
-        $nbIntervenant = count($intervenant);
-        if($nbIntervenant == 1){
-            $listeticket = DB::select("SELECT ticket.id, NOM_CLIENT, DEPARTEMENT, CATEGORIE, ETAT, IMPORTANCE, DATE_AJOUT, SUJET
-            from TICKET, CLIENT where CLIENT.ID = TICKET.ID_CLIENT order by date_ajout desc");
+        $client = Client::getClientById($id_personne);
+        $intervenant = Intervenant::getIntervenantById($id_personne);
+
+        if($intervenant != null){
+            $listeticket = Ticket::getListeTicketsForClient();
         }
-        elseif($nbClient == 1){
-            $listeticket = DB::select("SELECT ticket.id, NOM_CLIENT, DEPARTEMENT, CATEGORIE, ETAT, IMPORTANCE, DATE_AJOUT, SUJET
-                from TICKET, CLIENT where CLIENT.ID = TICKET.ID_CLIENT and confidentialite = 'Public'
-	                union
-                SELECT ticket.id, NOM_CLIENT, DEPARTEMENT, CATEGORIE, ETAT, IMPORTANCE, DATE_AJOUT, SUJET
-                from TICKET, CLIENT where CLIENT.ID = TICKET.ID_CLIENT and nom_client = '$nom_client' order by date_ajout desc");
+        elseif($client != null){
+            $listeticket = Ticket::getListeTicketsForIntervenant($nom_client);
         }
-        elseif($nbClient ==0 || $nbIntervenant == 0){
-            $listeticket = DB::select("SELECT ticket.id, NOM_CLIENT, DEPARTEMENT, CATEGORIE, ETAT, IMPORTANCE, DATE_AJOUT, SUJET
-            from TICKET, CLIENT where CLIENT.ID = TICKET.ID_CLIENT and confidentialite = 'Public' order by date_ajout desc");
+        elseif($client != null || $intervenant != null){
+            $listeticket = Ticket::getListeTicketforPublic();
         }
-        //$listeticket = json_encode($listeticket);
+
         $titre = "Liste des tickets";
         return view('listeTicket',[
             'listeTicket'=>$listeticket,
