@@ -99,6 +99,7 @@
                         </thead>
                         <tbody>
                             @if($listeTicket!=null)
+
                                 @foreach($listeTicket as $ticket)
                             <tr>
                                 <td><a href = "{{ route('detailticket', ['id_ticket' =>$ticket->id, 'nom_client' => $ticket->nom_client]) }}">{{ $ticket->id }}</a></td>
@@ -131,8 +132,7 @@
                                     <td class="text-right">3</td>
                                 @endif
                                 <!--end: Importance-->
-
-                                <td>{{  $ticket->date_ajout  }}</td>
+                                <td>{{ \Carbon\Carbon::parse($ticket->date_ajout)->format('j F Y à G\hi') }}</td>
                                 <td>{{  $ticket->sujet }}</td>
                             </tr>
                                 @endforeach

@@ -12,9 +12,7 @@ use DateTime;
 use Illuminate\Support\Facades\DB;
 
 use Haruncpi\LaravelIdGenerator\IdGenerator;
-        header("Access-Control-Allow-Origin: http://localhost");
-        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-        header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 class gestionTicketController extends Controller
 {
 
@@ -29,10 +27,10 @@ class gestionTicketController extends Controller
         $intervenant = Intervenant::getIntervenantById($id_personne);
 
         if($intervenant != null){
-            $listeticket = Ticket::getListeTicketsForClient();
+            $listeticket = Ticket::getListeTicketsForIntervenant();
         }
         elseif($client != null){
-            $listeticket = Ticket::getListeTicketsForIntervenant($nom_client);
+            $listeticket = Ticket::getListeTicketsForClient($nom_client);
         }
         elseif($client != null || $intervenant != null){
             $listeticket = Ticket::getListeTicketforPublic();
@@ -136,7 +134,6 @@ class gestionTicketController extends Controller
     }
 
     public function traitementInsertionTicket(Request $request){
-
         request()->validate([
             'sujet' => ['required'],
             'categorie' => ['required'],
@@ -145,29 +142,22 @@ class gestionTicketController extends Controller
             'description' => ['required'],
             'departement' => ['required'],
         ]);
-
-        date_default_timezone_set('Indian/Antananarivo');
-        $dateajout = date('d/m/Y h:i:s');
-
-        $config = ['table'=>'ticket','length'=>10,'prefix'=>'TCK-'];
-        $id = IdGenerator::generate($config);
         $id_client= $request->session()->get('id');
 
-        $ticket = Models\Ticket::create([
-            'id' => $id,
-            'categorie' => request('categorie'),
-            'confidentialite' => request('confidentialite'),
-            'etat' => 'ouvert',
-            'importance' => request('importance'),
-            'date_ajout' => $dateajout,
-            'sujet' => request('sujet'),
-            'description' => request('description'),
-            'id_client' => $id_client,
-            'departement' => request('departement')
-        ]);
+        $ticket = Ticket::insertTicket(
+            $id_client,
+            request('categorie'),
+            request('confidentialite'),
+            request('importance'),
+            request('sujet'),
+            request('description'),
+            request('departement')
+        );
+
         $liste_tickets_reference = request('tickets');
+
         if(isset($liste_tickets_reference)){
-            $this->ajout_reference($id);
+            $this->ajout_reference($ticket->id);
         }
         return redirect('ticket-personne');
     }
